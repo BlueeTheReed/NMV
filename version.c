@@ -6,6 +6,8 @@
 int is_unstable(struct version *v)
 {
 
+	//Simple, marche toujours et est traité comme un truc statique
+	//par le compilateur
 	void *offset = &(((struct version *) NULL)->minor);
 
 

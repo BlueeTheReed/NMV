@@ -12,8 +12,8 @@ struct commit {
 
 int main(){
 
-	printf("comment: %p\n", &(((struct commit *) NULL)->id));
+	printf("id: %p\n", &(((struct commit *) NULL)->id));
 	printf("comment: %p\n", &(((struct commit *) NULL)->comment));
-	printf("comment: %p\n", &(((struct commit *) NULL)->version));
+	printf("version: %p\n", &(((struct commit *) NULL)->version));
 
 }

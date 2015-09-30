@@ -97,5 +97,9 @@ void infos(struct commit *from, int major, unsigned long minor)
 struct commit *commitOf(struct version *version)
 {
 	/* TODO : Exercice 2 - Question 2 */
+
+	void *offset = &(((struct commit *) NULL)->version);
+	return (struct commit *) version - (size_t) offset;
+
   return NULL;
 }
