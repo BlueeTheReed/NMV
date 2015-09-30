@@ -34,6 +34,8 @@ int main(int argc, char const* argv[])
 
 	infos(first, 1, 2);
 
+	infos(first, 2, 7);
+
 	infos(first, 1, 7);
 
 	infos(first, 4, 2);

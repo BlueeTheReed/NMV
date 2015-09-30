@@ -1,5 +1,6 @@
 #include<stdlib.h>
 #include<stdio.h>
+#include<string.h>
 
 #include"commit.h"
 
@@ -14,7 +15,16 @@ static int nextId = 0;
 struct commit *new_commit(unsigned short major, unsigned long minor, char *comment)
 {
 	/* TODO : Exercice 3 - Question 2 */
-  return NULL;
+
+	struct commit *new = malloc(sizeof(struct commit));
+	if(new == NULL)
+		perror("malloc commit"), exit(-1);
+
+	new->version.major = major;
+	new->version.minor = minor;
+	new->comment = strdup(comment);
+
+  return new;
 }
 
 /**
@@ -24,7 +34,19 @@ struct commit *new_commit(unsigned short major, unsigned long minor, char *comme
   */
 static struct commit *insert_commit(struct commit *from, struct commit *new)
 {
-	/* TODO : Exercice 3 - Question 3 */
+	/* 
+	 * TODO : Exercice 3 - Question 3 
+	 * En quatre étapes, pour l'instant. À vérifier.
+	 */
+
+	new->next = from->next;
+	if(new->next != NULL)
+		new->next->prev = new;
+	from->next = new;
+
+	new->prev = from;
+	
+
   return NULL;
 }
 
@@ -36,7 +58,11 @@ static struct commit *insert_commit(struct commit *from, struct commit *new)
 struct commit *add_minor_commit(struct commit *from, char *comment)
 {
 	/* TODO : Exercice 3 - Question 3 */
-  return NULL;
+
+	struct commit *new = new_commit(from->version.major, from->version.minor+1, comment);
+	insert_commit(from, new);
+
+  return new;
 }
 
 /**
@@ -47,7 +73,9 @@ struct commit *add_minor_commit(struct commit *from, char *comment)
 struct commit *add_major_commit(struct commit *from, char *comment)
 {
 	/* TODO : Exercice 3 - Question 3 */
-  return NULL;
+	struct commit *new = new_commit(from->version.major+1, from->version.minor, comment);
+	insert_commit(from, new);
+  return new;
 }
 
 /**
@@ -67,6 +95,14 @@ struct commit *del_commit(struct commit *victim)
 void display_commit(struct commit *c)
 {
 	/* TODO : Exercice 3 - Question 4 */
+
+
+
+	display_version(&(c->version), is_unstable);
+
+	printf("%s\n", c->comment);
+
+
 }
 
 /**
@@ -76,6 +112,17 @@ void display_commit(struct commit *c)
 void display_history(struct commit *from)
 {
 	/* TODO : Exercice 3 - Question 4 */
+
+	struct commit *aux = from;
+
+	do{
+
+		display_commit(aux);
+		aux = aux->next;
+
+	}while(aux != from && aux != NULL);
+
+	printf("\n");
 }
 
 /**
@@ -86,6 +133,24 @@ void display_history(struct commit *from)
 void infos(struct commit *from, int major, unsigned long minor)
 {
 	/* TODO : Exercice 3 - Question 6 */
+	struct commit *aux = from;
+	int found = 0;
+
+	do{
+
+		if(aux->version.major == major && 
+				aux->version.minor == minor){
+			display_commit(aux);
+			found++;
+			break;
+		}
+		aux = aux->next;
+
+	}while(aux != from && aux != NULL && ( aux->version.major <= major && aux->version.minor <= minor) );
+	
+	if(!found)
+		printf("Not Invented Here!\n");
+
 }
 
 /**
