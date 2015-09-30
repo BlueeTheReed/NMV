@@ -5,8 +5,12 @@
 
 int is_unstable(struct version *v)
 {
+
+	void *offset = &(((struct version *) NULL)->minor);
+
+
 	//return 1 & ((char *)v)[sizeof(short)];
-	return 1 & ((char *)v)[0];
+	return 1 & ((char *)v)[(size_t) offset];
 	//return v->minor % 2
 }
 

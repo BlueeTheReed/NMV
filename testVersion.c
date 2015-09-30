@@ -10,7 +10,7 @@ int main(int argc, char const *argv[])
 			    .minor = 5,
 			    .flags = 0};
 
-	display_version(&v, is_unstable_bis);
+	display_version(&v, is_unstable);
 	printf("\n");
 
 	v.minor++;
@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
 
 	v.major++;
 	v.minor = 0;
-	display_version(&v, is_unstable_bis);
+	display_version(&v, is_unstable);
 	printf("\n");
 
 	v.minor++;
