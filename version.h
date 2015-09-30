@@ -16,8 +16,10 @@ struct version {
 };
 
 int is_unstable(struct version *v);
+int is_unstable_bis(struct version *v);
 
-void display_version(struct version *v);
+//void display_version(struct version *v);
+void display_version(struct version *v, int (*f)(struct version *v));
 
 int cmp_version(struct version *v, int major, int minor);
 
