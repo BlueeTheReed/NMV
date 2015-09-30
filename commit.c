@@ -99,7 +99,8 @@ struct commit *commitOf(struct version *version)
 	/* TODO : Exercice 2 - Question 2 */
 
 	void *offset = &(((struct commit *) NULL)->version);
-	return (struct commit *) version - (size_t) offset;
 
-  return NULL;
+	return (struct commit *) ( ((void*)version) -  offset);
+
+
 }
