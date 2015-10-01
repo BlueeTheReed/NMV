@@ -23,7 +23,7 @@ int is_unstable_bis(struct version *v){
 void display_version(struct version *v, int (*f)(struct version *v))
 {
 	printf("%2u-%lu %s", v->major, v->minor,
-			     f(v) ? "(unstable) " : "(stable)	");
+			     f(v) ? "(unstable) " : "(stable) ");
 }
 
 int cmp_version(struct version *v, int major, int minor)

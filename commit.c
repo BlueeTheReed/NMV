@@ -102,7 +102,7 @@ void display_commit(struct commit *c)
 	
 	display_version(&(c->version), is_unstable);
 
-	printf("%s\n", c->comment);
+	printf("\t%s\n", c->comment);
 
 
 }
