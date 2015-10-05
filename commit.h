@@ -10,7 +10,11 @@ struct commit {
 	unsigned long id;
 	struct version version;
 	char *comment;
-	struct list_head history;
+	struct list_head history, major_list;
+	struct commit *major_parent;
+	/* 
+	 * Le major parent d'une commit major pointer vers lui-même
+	 */
 	//struct commit *next;
 	//struct commit *prev;
 };

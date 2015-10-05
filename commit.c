@@ -25,7 +25,10 @@ struct commit *new_commit(unsigned short major, unsigned long minor, char *comme
 	new->version.minor = minor;
 	new->comment = comment;
 
+	new->major_parent = new;
+
 	INIT_LIST_HEAD(&new->history);
+	INIT_LIST_HEAD(&new->major_list);
 
 	return new;
 }
@@ -45,6 +48,12 @@ static struct commit *insert_commit(struct commit *from, struct commit *new)
 
 	list_add(&(new->history), &from->history);
 
+	if(new->major_parent == new){
+		printf("Unto the breach %p %p \n", from->major_parent, new->major_parent);
+		list_add(&(new->major_list), &(from->major_parent->major_list));
+		printf("Out of the breach\n");
+	} 
+
 
 	return NULL;
 }
@@ -59,6 +68,7 @@ struct commit *add_minor_commit(struct commit *from, char *comment)
 	/*  Exercice 3 - Question 3 */
 
 	struct commit *new = new_commit(from->version.major, from->version.minor+1, comment);
+	new->major_parent = from->major_parent;
 	insert_commit(from, new);
 
 	return new;
@@ -73,6 +83,7 @@ struct commit *add_major_commit(struct commit *from, char *comment)
 {
 	/*  Exercice 3 - Question 3 */
 	struct commit *new = new_commit(from->version.major+1, from->version.minor, comment);
+	new->major_parent = new;
 	insert_commit(from, new);
 	return new;
 }
@@ -86,8 +97,10 @@ struct commit *del_commit(struct commit *victim)
 	/*  TODO : Exercice 3 - Question 5 */
 
 
+	/*
 	list_del(&victim->history);
 	free(victim);
+	*/
 	return NULL;
 }
 
@@ -157,6 +170,14 @@ void infos(struct commit *from, int major, unsigned long minor)
 	   aux = aux->next;
 
 	   }while(aux != from && aux != NULL && ( aux->version.major <= major && aux->version.minor <= minor) );*/
+
+
+	struct commit *aux = NULL;
+	list_for_each_entry(aux, &from->major_list, major_list){
+		printf("Major\n");
+		if(aux->version.major >= major)
+			break;
+	}
 
 
 	if(!found)
