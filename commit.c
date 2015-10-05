@@ -85,6 +85,9 @@ struct commit *del_commit(struct commit *victim)
 {
 	/*  TODO : Exercice 3 - Question 5 */
 
+
+	list_del(&victim->history);
+	free(victim);
 	return NULL;
 }
 
