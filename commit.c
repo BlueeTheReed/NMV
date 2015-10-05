@@ -4,6 +4,7 @@
 
 #include"commit.h"
 
+LIST_HEAD(History);
 static int nextId = 0;
 
 /**
@@ -21,10 +22,11 @@ struct commit *new_commit(unsigned short major, unsigned long minor, char *comme
 		perror("malloc commit"), exit(-1);
 
 	new->id = nextId++;
-
 	new->version.major = major;
 	new->version.minor = minor;
-	new->comment = strdup(comment);
+	new->comment = comment;
+
+	INIT_LIST_HEAD(&new->history);
 
   return new;
 }
@@ -41,13 +43,9 @@ static struct commit *insert_commit(struct commit *from, struct commit *new)
 	 * En quatre étapes, pour l'instant. À vérifier.
 	 */
 
-	new->next = from->next;
-	if(new->next != NULL)
-		new->next->prev = new;
-	from->next = new;
+	list_add(&(new->history), &History);
 
-	new->prev = from;
-	
+
 
   return NULL;
 }
@@ -98,7 +96,7 @@ void display_commit(struct commit *c)
 {
 	/*  Exercice 3 - Question 4 */
 
-	printf("%d: ", c->id);
+	printf("%ld: ", c->id);
 	
 	display_version(&(c->version), is_unstable);
 
@@ -117,12 +115,16 @@ void display_history(struct commit *from)
 
 	struct commit *aux = from;
 
-	do{
+	/*struct commit *aux = from;
 
+	do{
 		display_commit(aux);
 		aux = aux->next;
+	}while(aux != from && aux != NULL);*/
 
-	}while(aux != from && aux != NULL);
+	list_for_each_entry(aux, &History, history){
+		display_commit(aux);
+	}
 
 	printf("\n");
 }
@@ -135,9 +137,9 @@ void display_history(struct commit *from)
 void infos(struct commit *from, int major, unsigned long minor)
 {
 	/*  Exercice 3 - Question 6 */
-	struct commit *aux = from;
 	int found = 0;
-
+	/*
+	struct commit *aux = from;
 	do{
 
 		if(aux->version.major == major && 
@@ -148,7 +150,8 @@ void infos(struct commit *from, int major, unsigned long minor)
 		}
 		aux = aux->next;
 
-	}while(aux != from && aux != NULL && ( aux->version.major <= major && aux->version.minor <= minor) );
+	}while(aux != from && aux != NULL && ( aux->version.major <= major && aux->version.minor <= minor) );*/
+
 	
 	if(!found)
 		printf("Not Invented Here!\n");

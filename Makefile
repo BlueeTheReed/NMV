@@ -8,15 +8,14 @@ testVersion: testVersion.o version.o
 calcul_offset: calcul_offset.c version.o commit.o
 	gcc $(CFLAGS) -o $@ $^
 
-
 testCommit: testCommit.o commit.o version.o
 	gcc $(CFLAGS) -o $@ $^
 
 
-version.o:version.c version.h
+version.o:version.c version.h list.h
 	gcc $(CFLAGS)  -o $@  -c $<
 
-commit.o:commit.c commit.h
+commit.o:commit.c commit.h list.h
 	gcc $(CFLAGS)  -o $@  -c $<
 
 
