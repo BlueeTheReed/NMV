@@ -4,15 +4,14 @@
 
 #include"commit.h"
 
-LIST_HEAD(History);
 static int nextId = 0;
 
 /**
-  * new_commit - alloue et initialise une structure commit correspondant au parametre
-  * @major:      numero de version majeure
-  * @minor:      numero de version mineure
-  * @comment:    pointeur vers une chaine de caracteres contenant un commentaire
-  */
+ * new_commit - alloue et initialise une structure commit correspondant au parametre
+ * @major:      numero de version majeure
+ * @minor:      numero de version mineure
+ * @comment:    pointeur vers une chaine de caracteres contenant un commentaire
+ */
 struct commit *new_commit(unsigned short major, unsigned long minor, char *comment)
 {
 	/* Exercice 3 - Question 2 */
@@ -28,14 +27,14 @@ struct commit *new_commit(unsigned short major, unsigned long minor, char *comme
 
 	INIT_LIST_HEAD(&new->history);
 
-  return new;
+	return new;
 }
 
 /**
-  * insert_commit - insert sans le modifier un commit dans la liste doublement chainee
-  * @from:       commit qui deviendra le predecesseur du commit insere
-  * @new:        commit a inserer - seul ses champs next et prev seront modifie
-  */
+ * insert_commit - insert sans le modifier un commit dans la liste doublement chainee
+ * @from:       commit qui deviendra le predecesseur du commit insere
+ * @new:        commit a inserer - seul ses champs next et prev seront modifie
+ */
 static struct commit *insert_commit(struct commit *from, struct commit *new)
 {
 	/* 
@@ -43,18 +42,18 @@ static struct commit *insert_commit(struct commit *from, struct commit *new)
 	 * En quatre étapes, pour l'instant. À vérifier.
 	 */
 
-	list_add(&(new->history), &History);
+
+	list_add(&(new->history), &from->history);
 
 
-
-  return NULL;
+	return NULL;
 }
 
 /**
-  * add_minor_commit - genere et insert un commit correspondant a une version mineure
-  * @from:           commit qui deviendra le predecesseur du commit insere
-  * @comment:        commentaire du commit
-  */
+ * add_minor_commit - genere et insert un commit correspondant a une version mineure
+ * @from:           commit qui deviendra le predecesseur du commit insere
+ * @comment:        commentaire du commit
+ */
 struct commit *add_minor_commit(struct commit *from, char *comment)
 {
 	/*  Exercice 3 - Question 3 */
@@ -62,42 +61,43 @@ struct commit *add_minor_commit(struct commit *from, char *comment)
 	struct commit *new = new_commit(from->version.major, from->version.minor+1, comment);
 	insert_commit(from, new);
 
-  return new;
+	return new;
 }
 
 /**
-  * add_major_commit - genere et insert un commit correspondant a une version majeure
-  * @from:           commit qui deviendra le predecesseur du commit insere
-  * @comment:        commentaire du commit
-  */
+ * add_major_commit - genere et insert un commit correspondant a une version majeure
+ * @from:           commit qui deviendra le predecesseur du commit insere
+ * @comment:        commentaire du commit
+ */
 struct commit *add_major_commit(struct commit *from, char *comment)
 {
 	/*  Exercice 3 - Question 3 */
 	struct commit *new = new_commit(from->version.major+1, from->version.minor, comment);
 	insert_commit(from, new);
-  return new;
+	return new;
 }
 
 /**
-  * del_commit - extrait le commit de l'historique
-  * @victim:         commit qui sera sorti de la liste doublement chainee
-  */
+ * del_commit - extrait le commit de l'historique
+ * @victim:         commit qui sera sorti de la liste doublement chainee
+ */
 struct commit *del_commit(struct commit *victim)
 {
 	/*  TODO : Exercice 3 - Question 5 */
-  return NULL;
+
+	return NULL;
 }
 
 /**
-  * display_commit - affiche un commit : "2:  0-2 (stable) 'Work 2'"
-  * @c:             commit qui sera affiche
-  */
+ * display_commit - affiche un commit : "2:  0-2 (stable) 'Work 2'"
+ * @c:             commit qui sera affiche
+ */
 void display_commit(struct commit *c)
 {
 	/*  Exercice 3 - Question 4 */
 
 	printf("%ld: ", c->id);
-	
+
 	display_version(&(c->version), is_unstable);
 
 	printf("\t%s\n", c->comment);
@@ -106,9 +106,9 @@ void display_commit(struct commit *c)
 }
 
 /**
-  * display_history - affiche tout l'historique, i.e. l'ensemble des commits de la liste
-  * @from:           premier commit de l'affichage
-  */
+ * display_history - affiche tout l'historique, i.e. l'ensemble des commits de la liste
+ * @from:           premier commit de l'affichage
+ */
 void display_history(struct commit *from)
 {
 	/*  Exercice 3 - Question 4 */
@@ -117,12 +117,15 @@ void display_history(struct commit *from)
 
 	/*struct commit *aux = from;
 
-	do{
-		display_commit(aux);
-		aux = aux->next;
-	}while(aux != from && aux != NULL);*/
+	  do{
+	  display_commit(aux);
+	  aux = aux->next;
+	  }while(aux != from && aux != NULL);*/
 
-	list_for_each_entry(aux, &History, history){
+
+	/* Hack dégeulasse pour affiche le first */
+	display_commit(from);
+	list_for_each_entry(aux, &from->history, history){
 		display_commit(aux);
 	}
 
@@ -130,40 +133,40 @@ void display_history(struct commit *from)
 }
 
 /**
-  * infos - affiche le commit qui a pour numero de version <major>-<minor>
-  * @major: major du commit affiche
-  * @minor: minor du commit affiche
-  */
+ * infos - affiche le commit qui a pour numero de version <major>-<minor>
+ * @major: major du commit affiche
+ * @minor: minor du commit affiche
+ */
 void infos(struct commit *from, int major, unsigned long minor)
 {
 	/*  Exercice 3 - Question 6 */
 	int found = 0;
 	/*
-	struct commit *aux = from;
-	do{
+	   struct commit *aux = from;
+	   do{
 
-		if(aux->version.major == major && 
-				aux->version.minor == minor){
-			display_commit(aux);
-			found++;
-			break;
-		}
-		aux = aux->next;
+	   if(aux->version.major == major && 
+	   aux->version.minor == minor){
+	   display_commit(aux);
+	   found++;
+	   break;
+	   }
+	   aux = aux->next;
 
-	}while(aux != from && aux != NULL && ( aux->version.major <= major && aux->version.minor <= minor) );*/
+	   }while(aux != from && aux != NULL && ( aux->version.major <= major && aux->version.minor <= minor) );*/
 
-	
+
 	if(!found)
 		printf("Not Invented Here!\n");
 
 }
 
 /**
-  * commitOf - retourne le commit qui contient la version passe en parametre
-  * @version:  pointeur vers la structure version dont cherche le commit
-  * Note:      cette fonction continue de fonctionner meme si l'on modifie
-  *            l'ordre et le nombre des champs de la structure commit.
-  */
+ * commitOf - retourne le commit qui contient la version passe en parametre
+ * @version:  pointeur vers la structure version dont cherche le commit
+ * Note:      cette fonction continue de fonctionner meme si l'on modifie
+ *            l'ordre et le nombre des champs de la structure commit.
+ */
 struct commit *commitOf(struct version *version)
 {
 	/*  Exercice 2 - Question 2 */
