@@ -49,9 +49,7 @@ static struct commit *insert_commit(struct commit *from, struct commit *new)
 	list_add(&(new->history), &from->history);
 
 	if(new->major_parent == new){
-		printf("Unto the breach %p %p \n", from->major_parent, new->major_parent);
 		list_add(&(new->major_list), &(from->major_parent->major_list));
-		printf("Out of the breach\n");
 	} 
 
 
@@ -172,11 +170,22 @@ void infos(struct commit *from, int major, unsigned long minor)
 	   }while(aux != from && aux != NULL && ( aux->version.major <= major && aux->version.minor <= minor) );*/
 
 
-	struct commit *aux = NULL;
+	struct commit *aux = NULL, *firstMajor = NULL;
 	list_for_each_entry(aux, &from->major_list, major_list){
-		printf("Major\n");
 		if(aux->version.major >= major)
 			break;
+	}
+	if(aux->version.major == major){
+		firstMajor = aux;
+		list_for_each_entry(aux, &firstMajor->history, history){
+			if(aux->version.major != major)
+				break;
+			if(aux->version.minor == minor){
+				found++;
+				display_commit(aux);
+			}
+		}
+
 	}
 
 
