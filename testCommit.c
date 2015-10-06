@@ -40,5 +40,7 @@ int main(int argc, char const* argv[])
 
 	infos(first, 4, 2);
 
+	//Let's clean up!
+	freeHistory(first);
 	return 0;
 }

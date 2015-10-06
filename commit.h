@@ -40,4 +40,11 @@ void infos(struct commit *from, int major, unsigned long minor);
 
 struct commit *commitOf(struct version *version);
 
+
+/*
+ * Exercice 6
+ */
+
+void freeHistory(struct commit *from);
+
 #endif

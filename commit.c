@@ -95,10 +95,8 @@ struct commit *del_commit(struct commit *victim)
 	/*  TODO : Exercice 3 - Question 5 */
 
 
-	/*
 	list_del(&victim->history);
 	free(victim);
-	*/
 	return NULL;
 }
 
@@ -207,6 +205,18 @@ struct commit *commitOf(struct version *version)
 	void *offset = &(((struct commit *) NULL)->version);
 
 	return (struct commit *) ( ((void*)version) -  offset);
+}
 
+/**
+ * freeHistory - Libère l'ensemble des commits qui sont liés à celui passé en 
+ * paremètre. Avant le return, la fonction free le commit passé en paramètre
+ * @from : Le commit à partir duquel la libération commence
+ */
+void freeHistory(struct commit *from){
 
+	struct commit *aux, *n;
+	
+	list_for_each_entry_safe(aux, n, &from->history, history)
+		del_commit(aux);
+	free(from);
 }
