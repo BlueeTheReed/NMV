@@ -6,14 +6,18 @@
 
 struct commit;
 
+struct commit_ops{
+	void (*display)(struct commit *c);
+	void (*extract)(struct commit *c);
+};
+
 struct commit {
 	unsigned long id;
 	struct version version;
 	char *comment;
 	struct list_head history, major_list;
 	struct commit *major_parent;
-	void (*display)(struct commit *c);
-	void (*extract)(struct commit *c);
+	struct commit_ops ops;
 	/* 
 	 * Le major parent d'une commit major pointer vers lui-même
 	 */
