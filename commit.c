@@ -69,6 +69,8 @@ struct commit *add_minor_commit(struct commit *from, char *comment)
 	new->major_parent = from->major_parent;
 	insert_commit(from, new);
 
+	new->display = display_commit;
+
 	return new;
 }
 
@@ -83,6 +85,9 @@ struct commit *add_major_commit(struct commit *from, char *comment)
 	struct commit *new = new_commit(from->version.major+1, from->version.minor, comment);
 	new->major_parent = new;
 	insert_commit(from, new);
+
+	new->display = display_major_commit;
+
 	return new;
 }
 
@@ -117,6 +122,20 @@ void display_commit(struct commit *c)
 
 }
 
+
+/* Exercice 7 Q2
+ * display_major_commit
+ */
+void display_major_commit(struct commit *c){
+
+	printf("%ld: ", c->id);
+
+	display_version(&(c->version), is_unstable);
+
+	printf("\t%s\t###\n", c->comment);
+
+}
+
 /**
  * display_history - affiche tout l'historique, i.e. l'ensemble des commits de la liste
  * @from:           premier commit de l'affichage
@@ -127,18 +146,11 @@ void display_history(struct commit *from)
 
 	struct commit *aux = from;
 
-	/*struct commit *aux = from;
+	from->display(from);
 
-	  do{
-	  display_commit(aux);
-	  aux = aux->next;
-	  }while(aux != from && aux != NULL);*/
-
-
-	/* Hack dégeulasse pour affiche le first */
-	display_commit(from);
 	list_for_each_entry(aux, &from->history, history){
-		display_commit(aux);
+//		display_commit(aux);
+		aux->display(aux);
 	}
 
 	printf("\n");

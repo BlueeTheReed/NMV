@@ -8,6 +8,8 @@ int main(int argc, char const* argv[])
 	struct commit *first = new_commit(0, 0, "First !");
 	struct commit *tmp, *victim, *last;
 
+	first->display = display_major_commit;
+
 	display_commit(first);
 	printf("\n");
 
@@ -34,13 +36,9 @@ int main(int argc, char const* argv[])
 
 	infos(first, 1, 2);
 
-	infos(first, 2, 7);
-
 	infos(first, 1, 7);
 
 	infos(first, 4, 2);
 
-	//Let's clean up!
-	freeHistory(first);
 	return 0;
 }
