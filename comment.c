@@ -11,19 +11,32 @@ struct comment *new_comment(
 {
 	struct comment *c = (struct comment *) malloc(sizeof(struct comment));
 
+	/*
+	 * Exercice 8
+	 */
+	title_size = strlen(title);
+	author_size = strlen(author);
+	text_size = strlen(text);
+
 	c->title_size = title_size;
-	if(! (c->title = malloc(title_size)))
-		return NULL;
+	if(! (c->title = malloc(title_size))){
+		perror("malloc title");
+	       	return NULL;
+	}
 	memcpy(c->title, title, title_size);
 
 	c->author_size = author_size;
-	if(! (c->author = malloc(author_size)))
+	if(! (c->author = malloc(author_size))){
+		perror("malloc author");
 		return NULL;
+	}
 	memcpy(c->author, author, author_size);
 
 	c->text_size = text_size;
-	if(! (c->text = malloc(text_size)))
+	if(! (c->text = malloc(text_size))){
+		perror("malloc text");
 		return NULL;
+	}
 	memcpy(c->text, text, text_size);
 
 	return c;
