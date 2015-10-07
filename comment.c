@@ -14,9 +14,10 @@ struct comment *new_comment(
 	/*
 	 * Exercice 8
 	 */
-	title_size = strlen(title);
-	author_size = strlen(author);
-	text_size = strlen(text);
+	title_size = strlen(title) + 1 ;
+	author_size = strlen(author) + 1;
+	text_size = strlen(text) + 1;
+	//***********
 
 	c->title_size = title_size;
 	if(! (c->title = malloc(title_size))){
