@@ -4,7 +4,8 @@
 
 #include"commit.h"
 
-static int nextId = 0;
+/*Initialisé à zéro automatiquement */
+static int nextId;
 
 /**
  * new_commit - alloue et initialise une structure commit correspondant au parametre
