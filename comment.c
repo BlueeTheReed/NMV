@@ -13,14 +13,16 @@ struct comment *new_comment(int title_size, char *title,
 	/*
 	 * Exercice 8
 	 */
+	/*
 	title_size = strlen(title) + 1;
 	author_size = strlen(author) + 1;
 	text_size = strlen(text) + 1;
+	*/
 
 	c->title_size = title_size;
 	if (!(c->title = malloc(title_size))) {
 		perror("malloc title");
-		return NULL;
+		goto free_c;
 	}
 	memcpy(c->title, title, title_size);
 
@@ -42,10 +44,10 @@ struct comment *new_comment(int title_size, char *title,
 
  err_text:
 	free(c->author);
-	c->author = NULL;
  err_author:
 	free(c->title);
-	c->title = NULL;
+free_c:
+	free(c);
 	return NULL;
 }
 
