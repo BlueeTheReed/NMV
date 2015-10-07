@@ -13,7 +13,7 @@ static int nextId = 0;
  * @comment:    pointeur vers une chaine de caracteres contenant un commentaire
  */
 struct commit *new_commit(unsigned short major, unsigned long minor,
-		char *comment)
+			  char *comment)
 {
 	/* Exercice 3 - Question 2 */
 
@@ -65,7 +65,7 @@ struct commit *add_minor_commit(struct commit *from, char *comment)
 	/*  Exercice 3 - Question 3 */
 
 	struct commit *new =
-		new_commit(from->version.major, from->version.minor + 1, comment);
+	    new_commit(from->version.major, from->version.minor + 1, comment);
 	new->major_parent = from->major_parent;
 	insert_commit(from, new);
 
@@ -84,7 +84,7 @@ struct commit *add_major_commit(struct commit *from, char *comment)
 {
 	/*  Exercice 3 - Question 3 */
 	struct commit *new =
-		new_commit(from->version.major + 1, from->version.minor, comment);
+	    new_commit(from->version.major + 1, from->version.minor, comment);
 	new->major_parent = new;
 	insert_commit(from, new);
 
@@ -246,6 +246,6 @@ void freeHistory(struct commit *from)
 	struct commit *aux, *n;
 
 	list_for_each_entry_safe(aux, n, &from->history,
-			history) del_commit(aux);
+				 history) del_commit(aux);
 	free(from);
 }
