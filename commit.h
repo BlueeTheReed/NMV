@@ -13,6 +13,7 @@ struct commit {
 	struct list_head history, major_list;
 	struct commit *major_parent;
 	void (*display)(struct commit *c);
+	void (*extract)(struct commit *c);
 	/* 
 	 * Le major parent d'une commit major pointer vers lui-même
 	 */
@@ -53,4 +54,6 @@ void freeHistory(struct commit *from);
  */
 void display_major_commit(struct commit *from);
 
+void extract_major(struct commit *victim);
+void extract_minor(struct commit *victim);
 #endif

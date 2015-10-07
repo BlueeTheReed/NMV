@@ -70,6 +70,7 @@ struct commit *add_minor_commit(struct commit *from, char *comment)
 	insert_commit(from, new);
 
 	new->display = display_commit;
+	new->extract = extract_minor;
 
 	return new;
 }
@@ -87,6 +88,7 @@ struct commit *add_major_commit(struct commit *from, char *comment)
 	insert_commit(from, new);
 
 	new->display = display_major_commit;
+	new->extract = extract_major;
 
 	return new;
 }
@@ -99,10 +101,25 @@ struct commit *del_commit(struct commit *victim)
 {
 	/*  TODO : Exercice 3 - Question 5 */
 
+	victim->extract(victim);
 
+
+	return NULL;
+}
+
+void extract_major(struct commit *victim){
+	struct commit *aux, *n;
+	list_for_each_entry_safe(aux, n, &victim->history, history){
+		if(aux->major_parent == aux && aux != victim)
+			break;
+		aux->extract(aux);
+	}
+	extract_minor(victim);
+
+}
+void extract_minor(struct commit *victim){
 	list_del(&victim->history);
 	free(victim);
-	return NULL;
 }
 
 /**

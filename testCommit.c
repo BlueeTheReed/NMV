@@ -7,8 +7,12 @@ int main(int argc, char const* argv[])
 {
 	struct commit *first = new_commit(0, 0, "First !");
 	struct commit *tmp, *victim, *last;
+	
+	struct commit *aux;
 
 	first->display = display_major_commit;
+	first->major_parent = first;
+	first->extract = extract_major;
 
 	display_commit(first);
 	printf("\n");
@@ -24,7 +28,7 @@ int main(int argc, char const* argv[])
 	del_commit(victim);
 	display_history(first);
 
-	tmp = add_major_commit(last, "Realse 1");
+	aux  =tmp = add_major_commit(last, "Realse 1");
 	tmp = add_minor_commit(tmp, "Work 1");
 	tmp = add_minor_commit(tmp, "Work 2");
 	tmp = add_major_commit(tmp, "Realse 2");
@@ -40,5 +44,14 @@ int main(int argc, char const* argv[])
 
 	infos(first, 4, 2);
 
+
+	/*
+	 * Test Exercice 7
+	 */
+
+	del_commit(aux);
+	display_history(first);
+	
+	//freeHistory(first);
 	return 0;
 }
