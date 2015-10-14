@@ -1,6 +1,6 @@
-L'option -kernel qui indique le chemin  vers le binaire du noyau
+L'option -kernel qui indique le chemin  vers l'archive du noyau
 
-On remplace les fonctionnement de GRUB avec les options de type
+On remplit les fonctions d'un GRUB avec les options de type
 	-initrd //indique un système de fichier minimal pour le démarrage
 	-kernel 
 	-append
@@ -11,7 +11,7 @@ On peut aussi faire semblant d'avoir un port serial
 
 	Ex: -serial stdio => Donne accès au dernières informations des logs, y compris si tout a crashé!
 
-	Par contre avec le serial, il ne faut pas utiliser le sortie serial pour se login. Sinon on risque de se mélanger les pinceaux entre les log et le stdout
+	Par contre avec le serial, il ne faut pas utiliser l'io serial pour se login. Sinon on risque de se mélanger les pinceaux entre les log et le stdout
 
 
 le lsmod n'affiche aucun module car si on fait un grep sur "=m" on n'a qu'une seule ligne.
@@ -36,7 +36,7 @@ La commande pstree 0 nous montre des choses étranges:
 On a bash en processus 1.
 On a kthreadd en processus 0
 
-	kthreadd est un _thread_noyaux_ , et il est le père de tout les processus noyau.
+	kthreadd est un _thread_noyau_ , et il est le père de tout les processus noyau.
 		ex: writeback a pour rôle d'écrire les pages sales.
 
 	Le processus 1 par défaut est donc init.
@@ -46,6 +46,7 @@ On a kthreadd en processus 0
 
 	
 mount -t proc proc /proc => monter le fs proc de type proc dans /proc
+C'est cool de parler la langue des orinateurs
 
 Pour relancer le init comme par d'éfaut,voir
 
@@ -67,7 +68,7 @@ Exercice 4:
 
 Le rôle de l'initramfs: 
 	Si le driver du système de fichier est dans le système de fichier, on se mord la queue. 
-	Le rôle de l'initramfs est visible dans le .ko de l'init.
+	Le rôle de l'initramfs est apparent dans les .ko de l'init.
 	Initramfs est un système de fichier en mémoire. Il va placer des information en mémoire dans des emplacements auxquels linux s'attend.
 	Quelques modprobe s pour charger les bons drivers
 	Il va monter la vraie partition dans la racine (se remplacer lui même), et ensuite il lancera un exec sur le init de Linux
@@ -85,6 +86,12 @@ On a une carte graphique et autres et tout ceci demande la présence de drivers!
 Pour l'Exercice 5:
  	Il y'a une erreur, il faudra
 		cp helloWorld.c helloWorldParam.c
+
+Q5.6	/proc => procfs
+	/sys => sysfs 
+
+	Faut pas déconner non plus.
+
 
 
 Pour make -j il n'y a pas de valeur parfaite. Pas même sur le nombre de coeur.

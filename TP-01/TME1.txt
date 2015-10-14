@@ -16,7 +16,7 @@ Question 1:
 
 	//Un mot fait quatre octets Donc il fait:
 
-	| mot des 4 Octest|
+	|mot des4 Octets|
 	|	[     2]|
 	|[	4      ]|
 	|	  [  1 ]|
@@ -25,12 +25,7 @@ Question 1:
 	|		|
 	|		|
 
-Il ne faut donc jamais déduire la position des champs d'une structure à partir de la taille des éléments qui la précèdent
-
-Si on vait faire l'affichage de cette manière, on peut:
-	-Inverser l'ordre des attributs de la structure pour que le long soit en premier, directement suivi du short.
-	-changer le return  avec 1 & ((char *)v)[0]
-
+Il ne faut donc jamais déduire la position des champs d'une structure à partir de la taille des éléments qui la précèdent!
 
 Au final on connaît l'@ du premier champ d'une structure.
 Et on peut aussi faire de la magie avec la technique du pointeur null dont on prend un attribut.
@@ -83,7 +78,7 @@ p[3] == p + 3
 	Une suppression des éléments pendant le parcours n'est pas cool. Mais on peut le faire si on utilise des marcros qui se terminent par safe:
 		ex: list_for_each_safe
 
-On aura droit à un /Vrac/Sopena/NMV/biblio.txt :: Livres sur comment faire du code et sur comment ça marche dans le noyau
+On aura droit à un /Vrac/Sopena/NMV/biblio.txt :: Livres sur comment faire du code et sur comment ça marche dans le noyau [Un jour, éventuellement...]
 
 Dans le kernel: Arbres binaires rouge/noir de recherche gratuits, une stack, table de hash, listes
 
