@@ -1,0 +1,46 @@
+L'option -kernel qui indique le chemin  vers le binaire du noyau
+
+On remplace les fonctionnement de GRUB avec les options de type
+	-initrd //indique un système de fichier minimal pour le démarrage
+	-kernel 
+	-append
+
+On peut aussi faire semblant d'avoir un port serial
+	-serial
+	Crée un port série virtuel pour que la VM offre à la machine phyique des informations.
+
+	Ex: -serial stdio => Donne accès au dernières informations des logs, y compris si tout a crashé!
+
+	Par contre avec le serial, il ne faut pas utiliser le sortie serial pour se login. Sinon on risque de se mélanger les pinceaux entre les log et le stdout
+
+
+le lsmod n'affiche aucun module car si on fait un grep sur "=m" on n'a qu'une seule ligne.
+
+	Tout les modules que l'on a spécifié dans le .config sont "=y", il sont embarqués dans le noyau.
+	Donc tout les modules sont spécifiés comme étant compilés et intégrés. Ils font maintenant partie du noyau monolithique.
+
+
+
+Lancer un shell via l'option init du kernel: LA meilleure solution au monde!
+
+ps ne marche pas car il se sert du procfs, qui apparemment est monté suite aux actions d'init.
+
+mount -t proc proc /proc => monter le fs proc de type proc dans /proc
+
+Pour relancer le init comme par d'éfaut,voir
+
+	# make 7 bootparam
+
+Vu qu'init doit avoir le PID ZÉRO, il faut faire attention quand on lance un init de remplacement.
+
+Donc au lieu de fait /sbin/init il faut faire 
+	$exec /sbin/init
+
+
+Pour l'Exercice 5:
+ 	Il y'a une erreur, il faudra
+		cp helloWorld.c helloWorldParam.c
+
+
+Pour make -j il n'y a pas de valeur parfaite. Pas même sur le nombre de coeur.
+Au moins un par coeur, et si la machine est très lente, on peut multiplier ce nombre par x2, x3, x4
