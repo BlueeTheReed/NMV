@@ -1,0 +1,127 @@
+
+testVersion:
+	On veut considérer que la structure est un tableau, pour être plus "tricky"
+
+
+Comparer l'addresse théorique que l'on a calculé et l'addresse réelle du champ.
+On veut simplement comparer la valeur du premier bit du deuxième champ de la struct.
+
+
+Question 1:
+	
+	On a un short de deux octets dans la structure
+	On veut: [2 bytes][   4 bytes   ][1byte]
+
+	La norme veut garantir que les champs sont stockés dans l'ordre de leur déclaration dans la structure. Et que l'@ du premier attribut est la même que celle de la structure. Mais gcc veut éviter de laisser des champs à cheval entre deux mots/
+
+	//Un mot fait quatre octets Donc il fait:
+
+	|mot des4 Octets|
+	|	[     2]|
+	|[	4      ]|
+	|	  [  1 ]|
+	|		|
+	|		|
+	|		|
+	|		|
+
+Il ne faut donc jamais déduire la position des champs d'une structure à partir de la taille des éléments qui la précèdent!
+
+Au final on connaît l'@ du premier champ d'une structure.
+Et on peut aussi faire de la magie avec la technique du pointeur null dont on prend un attribut.
+
+
+Arithmétique des pointeurs.
+
+p[3] == p + 3 
+	On a un alignement car on n'ajoute pas 3 mais (3 * (sizeof [type de p]))
+
+	Si on veut vraiment le faire il faudra noter :   (char *)p + (char *) 3
+		On ne veut pas que gcc ne multiplie 3 par la taille du pointeur. Donc on fait de la magie entre pointeurs
+
+
+#Exercice 4
+
+	Les fonctions les plus importantes:
+
+	INIT_LIST_HEAD
+	list_add
+	list_del
+	
+	list_for_each		=> macro
+	list_for_each_entry     => macro
+
+
+	Q4.1 Non, on ne peut pas factoriser le code de la même manière que précédemment. Vu qu'on ajoute des fonctionnalités et un traitement spécifique durant la création de commit.
+
+
+#Rappel sur les listes (de la part de Sopena)
+
+	Quand on a une structure de liste doublement chaînée on a des structures de données qui possèdent des attributs prev, next.
+	Mais dans ce cas on est très proche de l'implémentation des données que l'on manipule et on n'a aucune générécité.
+
+	
+	Dans le noyau on fait tout pour être générique. La structure que l'on chaîne possède un attribut de type list_head (pas de pointeur, mais une structure list_head).
+	Ensuite on ira de list_head en list_head via les chaînes. Pour récupérer la structure qui embeds cette instance particulière de list_head on peut soit:
+		-faire un peu d'arithmétique des pointerus
+		-utiliser list_entry()
+
+	Les list du noyau sont donc ulra génériques!
+	
+	On peut même  faire en sorte qu'un élément appartienne à plusisuer listes en ajoutant simplement un nouvel attribut de type list_head à la structure.
+
+	
+	list_head est une liste circulaire doublement chaînée.
+
+
+#Pour la dernière question:
+	Une suppression des éléments pendant le parcours n'est pas cool. Mais on peut le faire si on utilise des marcros qui se terminent par safe:
+		ex: list_for_each_safe
+
+On aura droit à un /Vrac/Sopena/NMV/biblio.txt :: Livres sur comment faire du code et sur comment ça marche dans le noyau [Un jour, éventuellement...]
+
+Dans le kernel: Arbres binaires rouge/noir de recherche gratuits, une stack, table de hash, listes
+
+
+## Semaine 2
+
+Pour l'insertion du premier commit, il faudra modifier testCommit pour
+l'insertion du premier membre, histoire de faire en sorte que le premier
+commit en question fasse bien partie des listes.
+
+
+Pour le display_history, on pourra changer le paramètre et en faire un
+list_head *history
+
+Les macros foreach _safe permettent des modifs dans la liste durant le
+parcrours
+
+=>=>=> Avec gcc les globlaes static sont autoatiquement initialisées à 0 ou
+NULL
+
+
+Pour voir l'effet des macros, faire gcc -E
+
+
+/*
+* Correction Exercice 8
+*/
+
+Q1. Naivement le programme crée une fuite mémoire si on quitte la fonction
+après une erreur.
+	Il faut faire les tests d'erreur à l'intèrieur des boucle de test du
+retour et ensuite se débrouiller pour libérer ce que l'on veut libérer. On
+veut simuler le traitement des exceptions.
+	Donc autant les goto c'est crade, autant on va s'en servir pour les
+traitements d'erreur.
+
+	Pour les erreur, il n'y a rien de mieux après tout.
+
+
+GDB:
+
+gdb ./prg
+break [...]
+run
+
+print

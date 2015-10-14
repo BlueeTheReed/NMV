@@ -1,0 +1,102 @@
+L'option -kernel qui indique le chemin  vers l'archive du noyau
+
+On remplit les fonctions d'un GRUB avec les options de type
+	-initrd //indique un système de fichier minimal pour le démarrage
+	-kernel 
+	-append
+
+On peut aussi faire semblant d'avoir un port serial
+	-serial
+	Crée un port série virtuel pour que la VM offre à la machine phyique des informations.
+
+	Ex: -serial stdio => Donne accès au dernières informations des logs, y compris si tout a crashé!
+
+	Par contre avec le serial, il ne faut pas utiliser l'io serial pour se login. Sinon on risque de se mélanger les pinceaux entre les log et le stdout
+
+
+le lsmod n'affiche aucun module car si on fait un grep sur "=m" on n'a qu'une seule ligne.
+
+	Tout les modules que l'on a spécifié dans le .config sont "=y", il sont embarqués dans le noyau.
+	Donc tout les modules sont spécifiés comme étant compilés et intégrés. Ils font maintenant partie du noyau monolithique.
+
+
+Le init=/root/hello crash car linux n'a plus rien à faire une fois le programme décrit commit init s'en ca
+
+
+Lancer un shell via l'option init du kernel: LA meilleure solution au monde!
+
+ps ne marche pas car il se sert du procfs, qui apparemment est monté suite aux actions d'init.
+ps apprend des informations sur les processus via le procfs.
+
+La commande pstree 0 nous montre des choses étranges:
+	-Pas de processus 0
+	-La racine affiche un '?'
+	-On ne sait pas ce qu'est la racine, et elle a deux fils.
+### pstree
+On a bash en processus 1.
+On a kthreadd en processus 0
+
+	kthreadd est un _thread_noyau_ , et il est le père de tout les processus noyau.
+		ex: writeback a pour rôle d'écrire les pages sales.
+
+	Le processus 1 par défaut est donc init.
+
+	On a appris en Noyau que le processus 0 est le swapper. Dans Linux, c'est faux. Il s'agit désormais du prermier processus noyau.
+
+
+	
+mount -t proc proc /proc => monter le fs proc de type proc dans /proc
+C'est cool de parler la langue des orinateurs
+
+Pour relancer le init comme par d'éfaut,voir
+
+	# make 7 bootparam
+
+Vu qu'init doit avoir le PID UN, il faut faire attention quand on lance un init de remplacement.
+
+Donc au lieu de fait /sbin/init il faut faire 
+	$exec /sbin/init
+
+Systemd est caractèriel et tiens absolument à être le processus de PID 0, d'où le exec.
+
+On aurait pu lancer init au lieux de /sbin/init car /sbin € PATH
+
+Exercice 4: 
+	l'initramfs se trouve dans la VM, et ce n'est pas un nom de fichier, mais un type de fichier.
+
+	Le cpio ne prend pas l'option -no-absolute-filename dans la VM.
+
+Le rôle de l'initramfs: 
+	Si le driver du système de fichier est dans le système de fichier, on se mord la queue. 
+	Le rôle de l'initramfs est apparent dans les .ko de l'init.
+	Initramfs est un système de fichier en mémoire. Il va placer des information en mémoire dans des emplacements auxquels linux s'attend.
+	Quelques modprobe s pour charger les bons drivers
+	Il va monter la vraie partition dans la racine (se remplacer lui même), et ensuite il lancera un exec sur le init de Linux
+
+	=> Résumé: travail préparatoire pour le vrai système.
+
+	Dans tout les cas, l'option intrd semble fonctionner de manière étrange. Voir la semaine prochaine si l'énoncé a été modifié.
+
+
+## Avec le init=/bin/bash 
+On n'a des sorties sur l'écran et pas seulement sur la sortie série car contrairement au vrai init /bin/bash ne sait pas écrire sur la sortie standard.
+On a une carte graphique et autres et tout ceci demande la présence de drivers!
+
+
+Pour l'Exercice 5:
+ 	Il y'a une erreur, il faudra
+		cp helloWorld.c helloWorldParam.c
+
+Q5.6	/proc => procfs
+	/sys => sysfs 
+
+	Faut pas déconner non plus.
+
+
+
+Pour make -j il n'y a pas de valeur parfaite. Pas même sur le nombre de coeur.
+Au moins un par coeur, et si la machine est très lente, on peut multiplier ce nombre par x2, x3, x4
+
+#poweroff
+Au lieu de poweroff on peut utiliser 
+	shutdown -h
