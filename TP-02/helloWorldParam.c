@@ -10,6 +10,8 @@ static int how_many;
 static char *whom;
 module_param(how_many, int, 0700);
 module_param(whom, charp, 0700);
+MODULE_PARM_DESC(whom, " L'intéressé");
+MODULE_PARM_DESC(how_many, " Nombre de répétitions\n");
 
 static int __init hello(void){
 	int i;
